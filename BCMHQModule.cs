@@ -3,9 +3,6 @@ using BepInEx;
 using BepInEx.Bootstrap;
 using BepInEx.Logging;
 using HarmonyLib;
-using System;
-using System.Reflection;
-using UnityEngine;
 
 namespace BCMHQModule
 {
@@ -41,10 +38,20 @@ namespace BCMHQModule
             {
                 foreach (PluginInfo p in Chainloader.PluginInfos.Values)
                 {
-                    if (p.Metadata.GUID == "Drinkable.BrutalCompanyMinus" && p.Metadata.Version.ToString() != "0.10.12")
+                    if (p.Metadata.GUID == "Drinkable.BrutalCompanyMinus")
                     {
-                        Logger.LogDebug($"Patching {nameof(ValueSynchronizer)}");
-                        Harmony.PatchAll(typeof(ValueSynchronizer));
+                        if (p.Metadata.Version.ToString() != "0.10.12") // v50+
+                        {
+                            Logger.LogDebug($"Patching {nameof(ValueSynchronizer)}");
+                            Harmony.PatchAll(typeof(ValueSynchronizer));
+                        }
+                        else // v49
+                        {
+                            Logger.LogDebug($"Patching {nameof(NoMasksPatcher)}");
+                            Harmony.PatchAll(typeof(NoMasksPatcher));
+                            Logger.LogDebug($"Patching {nameof(GetSafePositionPatcher)}");
+                            Harmony.PatchAll(typeof(GetSafePositionPatcher));
+                        }
                         break;
                     }
                 }

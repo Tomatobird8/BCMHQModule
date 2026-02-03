@@ -1,6 +1,5 @@
 extern alias HQoL72;
 extern alias HQoL73;
-using BepInEx.Bootstrap;
 using BrutalCompanyMinus.Minus;
 using HarmonyLib;
 using HQoL72Network = HQoL72::HQoL.Network;
