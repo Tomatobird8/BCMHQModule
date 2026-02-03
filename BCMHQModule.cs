@@ -3,6 +3,7 @@ using BepInEx;
 using BepInEx.Bootstrap;
 using BepInEx.Logging;
 using HarmonyLib;
+using System.Collections.Generic;
 
 namespace BCMHQModule
 {
@@ -34,31 +35,43 @@ namespace BCMHQModule
         {
             Harmony ??= new Harmony(MyPluginInfo.PLUGIN_GUID);
 
-            if (isHQoLLoaded)
+            foreach (PluginInfo p in Chainloader.PluginInfos.Values)
             {
-                foreach (PluginInfo p in Chainloader.PluginInfos.Values)
+                if (p.Metadata.GUID == "Drinkable.BrutalCompanyMinus")
                 {
-                    if (p.Metadata.GUID == "Drinkable.BrutalCompanyMinus")
+                    string versionString = p.Metadata.Version.ToString();
+                    if (!VersionList.ContainsValue(versionString))
                     {
-                        if (p.Metadata.Version.ToString() != "0.10.12") // v50+
+                        Logger.LogWarning($"Version {versionString} of BCM loaded was NOT contained in the internal version list. Make sure you're using one of the versions listed below.");
+                        foreach (KeyValuePair<Versions, string> k in VersionList)
+                        {
+                            Logger.LogWarning($"{k.Value}");
+                        }
+                        Logger.LogWarning("Applying v50+ patches anyway assuming this is a newer version. Things may break.");
+                    }
+                    if (versionString == VersionList[Versions.v49])
+                    {
+                        Logger.LogDebug($"BCM Version {VersionList[Versions.v49]} is loaded");
+                        Logger.LogDebug($"Patching {nameof(NoMasksPatcher)}");
+                        Harmony.PatchAll(typeof(NoMasksPatcher));
+                        Logger.LogDebug($"Patching {nameof(GetSafePositionPatcher)}");
+                        Harmony.PatchAll(typeof(GetSafePositionPatcher));
+                    }
+                    else
+                    {
+                        Logger.LogDebug($"BCM Version {versionString} is loaded");
+                        if (isHQoLLoaded)
                         {
                             Logger.LogDebug($"Patching {nameof(ValueSynchronizer)}");
                             Harmony.PatchAll(typeof(ValueSynchronizer));
                         }
-                        else // v49
+                        else
                         {
-                            Logger.LogDebug($"Patching {nameof(NoMasksPatcher)}");
-                            Harmony.PatchAll(typeof(NoMasksPatcher));
-                            Logger.LogDebug($"Patching {nameof(GetSafePositionPatcher)}");
-                            Harmony.PatchAll(typeof(GetSafePositionPatcher));
+                            Logger.LogWarning($"BCM 50+ loaded without HQoL. ValueSynchronizer won't be used.");
                         }
-                        break;
                     }
+                    break;
                 }
-            }
-            else
-            {
-                Logger.LogDebug("HQoL was not loaded. Skip patchning...");
             }
             Logger.LogDebug($"Patching {nameof(ShipLeaveOnQuit)}");
             Harmony.PatchAll(typeof(ShipLeaveOnQuit));
@@ -67,7 +80,6 @@ namespace BCMHQModule
             Harmony.PatchAll(typeof(PassTimeToNextDayPatcher));
 
             Logger.LogDebug("Finished patching!");
-
         }
 
         internal static void Unpatch()
@@ -78,5 +90,38 @@ namespace BCMHQModule
 
             Logger.LogDebug("Finished unpatching!");
         }
+
+        internal enum Versions
+        {
+            v49,
+            v50,
+            v56,
+            v72,
+            v73
+        }
+
+        internal static Dictionary<Versions, string> VersionList = new Dictionary<Versions, string> 
+        {
+            {
+                Versions.v49,
+                "0.10.12"
+            },
+            {
+                Versions.v50,
+                "0.13.9"
+            },
+            {
+                Versions.v56,
+                "0.13.10"
+            },
+            {
+                Versions.v72,
+                "0.13.13"
+            },
+            {
+                Versions.v73,
+                "0.13.14"
+            }
+        };
     }
 }
