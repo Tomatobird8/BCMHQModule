@@ -79,6 +79,9 @@ namespace BCMHQModule
             Logger.LogDebug($"Patching {nameof(PassTimeToNextDayPatcher)}");
             Harmony.PatchAll(typeof(PassTimeToNextDayPatcher));
 
+            Logger.LogDebug($"Patching {nameof(QuotaRackupPatcher)}");
+            Harmony.PatchAll(typeof(QuotaRackupPatcher));
+
             Logger.LogDebug("Finished patching!");
         }
 
