@@ -76,13 +76,19 @@ namespace BCMHQModule
             Logger.LogDebug($"Patching {nameof(ShipLeaveOnQuit)}");
             Harmony.PatchAll(typeof(ShipLeaveOnQuit));
 
-            Logger.LogDebug($"Patching {nameof(PassTimeToNextDayPatcher)}");
-            Harmony.PatchAll(typeof(PassTimeToNextDayPatcher));
+            Logger.LogDebug($"Patching {nameof(EndOfGamePatcher)}");
+            Harmony.PatchAll(typeof(EndOfGamePatcher));
 
             Logger.LogDebug($"Patching {nameof(QuotaRackupPatcher)}");
             Harmony.PatchAll(typeof(QuotaRackupPatcher));
 
             Logger.LogDebug("Finished patching!");
+        }
+
+        internal static void BackupPatch()
+        {
+            Logger.LogWarning($"Patching {nameof(PassTimeToNextDayPatcher)} as backup! Landing on company will count towards deadline!");
+            Harmony?.PatchAll(typeof(PassTimeToNextDayPatcher));
         }
 
         internal static void Unpatch()
