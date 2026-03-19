@@ -11,7 +11,6 @@ namespace BCMHQModule.Patches
     {
         [HarmonyPatch("EndOfGame", MethodType.Enumerator)]
         [HarmonyTranspiler]
-        [HarmonyDebug]
         static IEnumerable<CodeInstruction> EndOfGameTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             FieldInfo? playersDeadFieldInfo = null;
@@ -28,7 +27,7 @@ namespace BCMHQModule.Patches
             if (playersDeadFieldInfo == null)
             {
                 BCMHQModule.Logger.LogWarning("Could not find playersDead in EndOfGame.");
-                BCMHQModule.BackupPatch();
+                BCMHQModule.EndOfGameBackupPatch();
                 return instructions;
             }
 
@@ -79,7 +78,7 @@ namespace BCMHQModule.Patches
             catch (Exception ex)
             {
                 BCMHQModule.Logger.LogWarning($"Could not set new codeinstructions to EndOfGame. Exception {ex}");
-                BCMHQModule.BackupPatch();
+                BCMHQModule.EndOfGameBackupPatch();
             }
 
             return newInstructions;

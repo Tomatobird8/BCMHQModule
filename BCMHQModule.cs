@@ -52,18 +52,15 @@ namespace BCMHQModule
                     if (versionString == VersionList[Versions.v49])
                     {
                         Logger.LogDebug($"BCM Version {VersionList[Versions.v49]} is loaded");
-                        Logger.LogDebug($"Patching {nameof(NoMasksPatcher)}");
-                        Harmony.PatchAll(typeof(NoMasksPatcher));
-                        Logger.LogDebug($"Patching {nameof(GetSafePositionPatcher)}");
-                        Harmony.PatchAll(typeof(GetSafePositionPatcher));
+                        PatchType([typeof(NoMasksPatcher), // v49 specific patches
+                            typeof(GetSafePositionPatcher)]);
                     }
                     else
                     {
                         Logger.LogDebug($"BCM Version {versionString} is loaded");
                         if (isHQoLLoaded)
                         {
-                            Logger.LogDebug($"Patching {nameof(ValueSynchronizer)}");
-                            Harmony.PatchAll(typeof(ValueSynchronizer));
+                            PatchType([typeof(ValueSynchronizer)]); // HQoL Support patch
                         }
                         else
                         {
@@ -73,22 +70,26 @@ namespace BCMHQModule
                     break;
                 }
             }
-            Logger.LogDebug($"Patching {nameof(ShipLeaveOnQuit)}");
-            Harmony.PatchAll(typeof(ShipLeaveOnQuit));
-
-            Logger.LogDebug($"Patching {nameof(EndOfGamePatcher)}");
-            Harmony.PatchAll(typeof(EndOfGamePatcher));
-
-            Logger.LogDebug($"Patching {nameof(QuotaRackupPatcher)}");
-            Harmony.PatchAll(typeof(QuotaRackupPatcher));
+            PatchType([typeof(ShipLeaveOnQuit), // General patches
+                typeof(EndOfGamePatcher),
+                typeof(QuotaRackupPatcher)]);
 
             Logger.LogDebug("Finished patching!");
         }
 
-        internal static void BackupPatch()
+        internal static void PatchType(System.Type[] typeArray)
         {
-            Logger.LogWarning($"Patching {nameof(PassTimeToNextDayPatcher)} as backup! Landing on company will count towards deadline!");
-            Harmony?.PatchAll(typeof(PassTimeToNextDayPatcher));
+            foreach (System.Type type in typeArray)
+            {
+                Logger.LogDebug($"Patching {type.Name}");
+                Harmony?.PatchAll(type);
+            }
+        }
+
+        internal static void EndOfGameBackupPatch()
+        {
+            Logger.LogWarning($"Failed to patch {nameof(EndOfGamePatcher)}! Patching {nameof(EndOfGamePatcherBackup)} as backup!");
+            PatchType([typeof(EndOfGamePatcherBackup)]);
         }
 
         internal static void Unpatch()
