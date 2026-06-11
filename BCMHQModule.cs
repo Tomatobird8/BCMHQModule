@@ -67,6 +67,10 @@ namespace BCMHQModule
                             Logger.LogWarning($"BCM 50+ loaded without HQoL. ValueSynchronizer won't be used.");
                         }
                     }
+                    if (versionString == VersionList[Versions.v72] || versionString == VersionList[Versions.v73])
+                    {
+                        PatchType([typeof(UpdateEnemyHPPatcher)]);
+                    }
                     break;
                 }
             }
