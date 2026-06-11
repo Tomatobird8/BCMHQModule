@@ -8,9 +8,9 @@ namespace BCMHQModule.Patches
     {
         [HarmonyPatch(typeof(QuickMenuManager), "LeaveGameConfirm")]
         [HarmonyPrefix]
-        private static void ShipLeave(LevelModifications __instance)
+        private static void ShipLeave()
         {
-            if (GameNetworkManager.Instance != null && !HUDManager.Instance.retrievingSteamLeaderboard && !StartOfRound.Instance.inShipPhase)
+            if (GameNetworkManager.Instance != null && !HUDManager.Instance.retrievingSteamLeaderboard && BrutalCompanyMinus.Net.Instance.receivedSyncedValues)
             {
                 BCMHQModule.Logger.LogInfo("ShipLeave called from LeaveGameConfirm to remove extra enemy spawn attributes.");
                 LevelModifications.OnShipLeave();

@@ -16,13 +16,13 @@ namespace BCMHQModule.Patches
             var codes = new List<CodeInstruction>(instructions);
 
             // Vector3 randomPositionInRadius = RoundManager.Instance.GetRandomPositionInRadius(vector, 0f, radius, random);
-            var originalMethod = AccessTools.Method(typeof(RoundManager), "GetRandomPositionInRadius", new[]
-            {
+            var originalMethod = AccessTools.Method(typeof(RoundManager), "GetRandomPositionInRadius",
+            [
                 typeof(Vector3),
                 typeof(float),
                 typeof(float),
                 typeof(System.Random)
-            });
+            ]);
 
             var replacementMethod = AccessTools.Method(typeof(GetSafePositionPatcher), nameof(GetSafePosition_Replacement));
 

@@ -92,22 +92,14 @@ namespace BCMHQModule
             PatchType([typeof(EndOfGamePatcherBackup)]);
         }
 
-        internal static void Unpatch()
-        {
-            Logger.LogDebug("Unpatching...");
-
-            Harmony?.UnpatchSelf();
-
-            Logger.LogDebug("Finished unpatching!");
-        }
-
         internal enum Versions
         {
             v49,
             v50,
             v56,
             v72,
-            v73
+            v73,
+            v81
         }
 
         internal static Dictionary<Versions, string> VersionList = new Dictionary<Versions, string> 
@@ -131,6 +123,10 @@ namespace BCMHQModule
             {
                 Versions.v73,
                 "0.13.14"
+            },
+            {
+                Versions.v81,
+                "0.13.15"
             }
         };
     }
