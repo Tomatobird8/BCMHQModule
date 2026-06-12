@@ -69,13 +69,25 @@ namespace BCMHQModule
                     }
                     if (versionString == VersionList[Versions.v72] || versionString == VersionList[Versions.v73])
                     {
-                        PatchType([typeof(UpdateEnemyHPPatcher)]);
+                        PatchType([typeof(UpdateEnemyHPPatcher)]); // Fix for bonus enemy HP for earlier versions with StarlancerAIFix
+                    }
+                    if (versionString == VersionList[Versions.v49])
+                    {
+                        PatchType([typeof(DelayedExcecutionPatcher_v49)]); // Fix for desynced outside map objects
+                    }
+                    else if (versionString != VersionList[Versions.v81])
+                    {
+                        PatchType([typeof(DelayedExcecutionPatcher)]); // Fix for desynced outside map objects
+                    }
+                    if (versionString != VersionList[Versions.v81])
+                    {
+                        PatchType([typeof(ShipLeaveOnQuit)]); // Fix for lingering enemy spawns due to mid-day resets
                     }
                     break;
                 }
             }
-            PatchType([typeof(ShipLeaveOnQuit), // General patches
-                typeof(EndOfGamePatcher),
+            // General patches
+            PatchType([typeof(EndOfGamePatcher),
                 typeof(QuotaRackupPatcher)]);
 
             Logger.LogDebug("Finished patching!");

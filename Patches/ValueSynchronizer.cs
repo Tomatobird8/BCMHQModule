@@ -16,13 +16,13 @@ namespace BCMHQModule.Patches
             var hqol73 = HQoL73Network.HQoLNetwork.Instance;
             if (hqol73 != null)
             {
-                __result = __result + HQoL73Network.HQoLNetwork.Instance.totalStorageValue.Value;
+                __result += HQoL73Network.HQoLNetwork.Instance.totalStorageValue.Value;
             }
 
             var hqol72 = HQoL72Network.HQoLNetwork.Instance;
             if (hqol72 != null)
             {
-                __result = __result + HQoL72Network.HQoLNetwork.Instance.totalStorageValue.Value;
+                __result += HQoL72Network.HQoLNetwork.Instance.totalStorageValue.Value;
             }
         }
     }
