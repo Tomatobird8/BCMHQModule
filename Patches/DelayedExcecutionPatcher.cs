@@ -9,7 +9,6 @@ namespace BCMHQModule.Patches
     public class DelayedExcecutionPatcher
     {
         [HarmonyTranspiler]
-        [HarmonyDebug]
         static IEnumerable<CodeInstruction> DelayedExcecutionTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             return new CodeMatcher(instructions)
