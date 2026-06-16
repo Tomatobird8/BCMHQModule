@@ -6,6 +6,9 @@ using System.Reflection;
 
 namespace BCMHQModule.Patches
 {
+    /// <summary>
+    /// Patch for making NoMasks event not softlock the game when playing the next day on the same moon. (v40 specific)
+    /// </summary>
     [HarmonyPatch]
     public class NoMasksPatcher
     {

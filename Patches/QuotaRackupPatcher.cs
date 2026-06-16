@@ -6,6 +6,9 @@ using System.Reflection.Emit;
 
 namespace BCMHQModule.Patches
 {
+    /// <summary>
+    /// Patch for making quota rack up faster.
+    /// </summary>
     [HarmonyPatch(typeof(HUDManager))]
     public class QuotaRackupPatcher
     {

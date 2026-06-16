@@ -3,6 +3,7 @@ using BepInEx;
 using BepInEx.Bootstrap;
 using BepInEx.Logging;
 using HarmonyLib;
+using System;
 using System.Collections.Generic;
 
 namespace BCMHQModule
@@ -16,6 +17,16 @@ namespace BCMHQModule
         public static BCMHQModule Instance { get; private set; } = null!;
         internal new static ManualLogSource Logger { get; private set; } = null!;
         internal static Harmony? Harmony { get; set; }
+
+        internal static List<VersionDefinition> versionDefinitions = new List<VersionDefinition> 
+        {
+            new VersionDefinition(Versions.v49, "0.10.12", [typeof(NoMasksPatcher), typeof(GetSafePositionPatcher), typeof(DelayedExecutionPatcher_v49), typeof(ShipLeaveOnQuit)]),
+            new VersionDefinition(Versions.v50, "0.13.9", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit)]),
+            new VersionDefinition(Versions.v56, "0.13.10", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit)]),
+            new VersionDefinition(Versions.v72, "0.13.13", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit), typeof(UpdateEnemyHPPatcher)]),
+            new VersionDefinition(Versions.v73, "0.13.14", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit), typeof(UpdateEnemyHPPatcher)]),
+            new VersionDefinition(Versions.v81, "0.13.16", []),
+        };
 
         internal static bool isHQoLLoaded;
 
@@ -37,65 +48,49 @@ namespace BCMHQModule
 
             foreach (PluginInfo p in Chainloader.PluginInfos.Values)
             {
-                if (p.Metadata.GUID == "Drinkable.BrutalCompanyMinus")
+                if (p.Metadata.GUID != "Drinkable.BrutalCompanyMinus")
                 {
-                    string versionString = p.Metadata.Version.ToString();
-                    if (!VersionList.ContainsValue(versionString))
+                    continue;
+                }
+                bool correctVersion = false;
+                Version bcmVersion = p.Metadata.Version;
+                foreach (VersionDefinition v in versionDefinitions)
+                {
+                    if (bcmVersion.ToString() != v.bcmVersion)
                     {
-                        Logger.LogWarning($"Version {versionString} of BCM loaded was NOT contained in the internal version list. Make sure you're using one of the versions listed below.");
-                        foreach (KeyValuePair<Versions, string> k in VersionList)
-                        {
-                            Logger.LogWarning($"{k.Value}");
-                        }
-                        Logger.LogWarning("Applying v50+ patches anyway assuming this is a newer version. Things may break.");
+                        continue;
                     }
-                    if (versionString == VersionList[Versions.v49])
+                    PatchType(v.types);
+                    if (v.version != Versions.v49 && isHQoLLoaded)
                     {
-                        Logger.LogDebug($"BCM Version {VersionList[Versions.v49]} is loaded");
-                        PatchType([typeof(NoMasksPatcher), // v49 specific patches
-                            typeof(GetSafePositionPatcher)]);
+                        PatchType([typeof(ValueSynchronizer)]); // HQoL Support patch
                     }
-                    else
-                    {
-                        Logger.LogDebug($"BCM Version {versionString} is loaded");
-                        if (isHQoLLoaded)
-                        {
-                            PatchType([typeof(ValueSynchronizer)]); // HQoL Support patch
-                        }
-                        else
-                        {
-                            Logger.LogWarning($"BCM 50+ loaded without HQoL. ValueSynchronizer won't be used.");
-                        }
-                    }
-                    if (versionString == VersionList[Versions.v72] || versionString == VersionList[Versions.v73])
-                    {
-                        PatchType([typeof(UpdateEnemyHPPatcher)]); // Fix for bonus enemy HP for earlier versions with StarlancerAIFix
-                    }
-                    if (versionString == VersionList[Versions.v49])
-                    {
-                        PatchType([typeof(DelayedExcecutionPatcher_v49)]); // Fix for desynced outside map objects
-                    }
-                    else if (versionString != VersionList[Versions.v81])
-                    {
-                        PatchType([typeof(DelayedExcecutionPatcher)]); // Fix for desynced outside map objects
-                    }
-                    if (versionString != VersionList[Versions.v81])
-                    {
-                        PatchType([typeof(ShipLeaveOnQuit)]); // Fix for lingering enemy spawns due to mid-day resets
-                    }
+                    correctVersion = true;
                     break;
                 }
+                if (!correctVersion)
+                {
+                    Logger.LogWarning($"Version {bcmVersion} of BCM loaded was NOT contained in the internal version list. Make sure you're using one of the versions listed below!");
+                    foreach (VersionDefinition v in versionDefinitions)
+                    {
+                        Logger.LogWarning($"{v.version}: {v.bcmVersion}");
+                    }
+                    Logger.LogWarning("Applying generic patches anyway assuming this is a newer version. Things may break.");
+                }
+                // General patches
+                PatchType([
+                    typeof(EndOfGamePatcher),
+                    typeof(QuotaRackupPatcher)
+                ]);
+                break;
             }
-            // General patches
-            PatchType([typeof(EndOfGamePatcher),
-                typeof(QuotaRackupPatcher)]);
 
             Logger.LogDebug("Finished patching!");
         }
 
-        internal static void PatchType(System.Type[] typeArray)
+        internal static void PatchType(Type[] typeArray)
         {
-            foreach (System.Type type in typeArray)
+            foreach (Type type in typeArray)
             {
                 Logger.LogDebug($"Patching {type.Name}");
                 Harmony?.PatchAll(type);
@@ -117,33 +112,5 @@ namespace BCMHQModule
             v73,
             v81
         }
-
-        internal static Dictionary<Versions, string> VersionList = new Dictionary<Versions, string> 
-        {
-            {
-                Versions.v49,
-                "0.10.12"
-            },
-            {
-                Versions.v50,
-                "0.13.9"
-            },
-            {
-                Versions.v56,
-                "0.13.10"
-            },
-            {
-                Versions.v72,
-                "0.13.13"
-            },
-            {
-                Versions.v73,
-                "0.13.14"
-            },
-            {
-                Versions.v81,
-                "0.13.15"
-            }
-        };
     }
 }

@@ -7,6 +7,9 @@ using HQoL73Network = HQoL73::HQoL.Network;
 
 namespace BCMHQModule.Patches
 {
+    /// <summary>
+    /// Patch for making the value stored in HQoL storage count towards in GetScrapInShip, which is used for difficulty calculation.
+    /// </summary>
     [HarmonyPatch]
     public class ValueSynchronizer
     {

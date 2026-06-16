@@ -5,8 +5,11 @@ using UnityEngine;
 
 namespace BCMHQModule.Patches
 {
+    /// <summary>
+    /// Patch for wrong seed used between host and client for spawned client-side objects like pumpkins. (v49 specific)
+    /// </summary>
     [HarmonyPatch(typeof(BrutalCompanyMinus.Minus.Manager), nameof(BrutalCompanyMinus.Minus.Manager.DelayedExecution), MethodType.Enumerator)]
-    public class DelayedExcecutionPatcher
+    public class DelayedExecutionPatcher_v49
     {
         [HarmonyTranspiler]
         static IEnumerable<CodeInstruction> DelayedExcecutionTranspiler(IEnumerable<CodeInstruction> instructions)
@@ -24,9 +27,6 @@ namespace BCMHQModule.Patches
                     new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(StartOfRound), nameof(StartOfRound.Instance))),
                     new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(StartOfRound), nameof(StartOfRound.randomMapSeed))),
                     new CodeInstruction(OpCodes.Ldc_I4_2),
-                    new CodeInstruction(OpCodes.Add),
-                    new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(BrutalCompanyMinus.Net), nameof(BrutalCompanyMinus.Net.Instance))),
-                    new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(BrutalCompanyMinus.Net), "_seed")),
                     new CodeInstruction(OpCodes.Add),
                     new CodeInstruction(OpCodes.Stsfld, AccessTools.Field(typeof(BrutalCompanyMinus.Minus.Manager.Spawn), nameof(BrutalCompanyMinus.Minus.Manager.Spawn.randomSeedValue)))
                 )

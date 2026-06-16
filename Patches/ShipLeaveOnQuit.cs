@@ -3,6 +3,9 @@ using HarmonyLib;
 
 namespace BCMHQModule.Patches
 {
+    /// <summary>
+    /// Patch for reverting level modifications when lobby was quit by using the quit button in the quick menu.
+    /// </summary>
     [HarmonyPatch]
     public class ShipLeaveOnQuit
     {

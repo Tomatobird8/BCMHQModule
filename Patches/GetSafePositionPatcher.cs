@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace BCMHQModule.Patches
 {
+    /// <summary>
+    /// Patch for fixing enemy spawn positions. (v49 specific)
+    /// </summary>
     [HarmonyPatch("BrutalCompanyMinus.Minus.Functions, BrutalCompanyMinus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", "GetSafePosition")]
     public class GetSafePositionPatcher
     {

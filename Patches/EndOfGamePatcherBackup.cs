@@ -2,6 +2,9 @@
 
 namespace BCMHQModule.Patches
 {
+    /// <summary>
+    /// Backup patch for making extra company landings not count towards savefile.
+    /// </summary>
     [HarmonyPatch(typeof(StartOfRound))]
     public class EndOfGamePatcherBackup
     {

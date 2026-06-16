@@ -6,6 +6,9 @@ using System.Reflection.Emit;
 
 namespace BCMHQModule.Patches
 {
+    /// <summary>
+    /// Patch for making landing on company not count towards days played in the savefile.
+    /// </summary>
     [HarmonyPatch(typeof(StartOfRound))]
     public class EndOfGamePatcher
     {

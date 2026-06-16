@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace BCMHQModule.Patches
 {
+    /// <summary>
+    /// Patch for v72-v73 to bonus enemy hp events.
+    /// </summary>
     [HarmonyPatch(typeof(EnemyAI))]
     public class UpdateEnemyHPPatcher
     {
