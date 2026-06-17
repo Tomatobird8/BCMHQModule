@@ -156,7 +156,8 @@ namespace BCMHQModule.Patches
             EventManager.currentEventDescriptions.Clear();
             foreach (MEvent e in events)
             {
-                EventManager.currentEventDescriptions.Add($"<color={e.ColorHex}>{e.Name()}</color>");
+                if (e.Name() == "ChineseProduce") EventManager.currentEventDescriptions.Add($"<color={e.ColorHex}>CheapProduce</color>");
+                else EventManager.currentEventDescriptions.Add($"<color={e.ColorHex}>{e.Name()}</color>");
             }
         } 
 
