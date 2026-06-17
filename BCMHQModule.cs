@@ -1,6 +1,7 @@
 using BCMHQModule.Patches;
 using BepInEx;
 using BepInEx.Bootstrap;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 using System;
@@ -17,6 +18,11 @@ namespace BCMHQModule
         public static BCMHQModule Instance { get; private set; } = null!;
         internal new static ManualLogSource Logger { get; private set; } = null!;
         internal static Harmony? Harmony { get; set; }
+
+        public static ConfigEntry<bool> internalNames = null!, sdcMode = null!;
+
+        internal static bool correctVersion = false;
+        internal static string bcmVersionString = "";
 
         internal static List<VersionDefinition> versionDefinitions = new List<VersionDefinition> 
         {
@@ -36,6 +42,9 @@ namespace BCMHQModule
 
             if (Instance == null) Instance = this;
 
+            internalNames = Config.Bind("General", "InternalEventNames", true, "Display the internal event names instead of the randomly selected event descriptions.");
+            sdcMode = Config.Bind("General", "SdcMode", false, "Set difficulty to 100 for Single Day Clear runs.");
+
             isHQoLLoaded = Chainloader.PluginInfos.ContainsKey("OreoM.HQoL.72") || Chainloader.PluginInfos.ContainsKey("OreoM.HQoL.73");
             Patch();
 
@@ -52,18 +61,19 @@ namespace BCMHQModule
                 {
                     continue;
                 }
-                bool correctVersion = false;
                 Version bcmVersion = p.Metadata.Version;
+                bcmVersionString = bcmVersion.ToString();
                 foreach (VersionDefinition v in versionDefinitions)
                 {
-                    if (bcmVersion.ToString() != v.bcmVersion)
+                    if (bcmVersionString != v.bcmVersion)
                     {
                         continue;
                     }
                     PatchType(v.types);
-                    if (v.version != Versions.v49 && isHQoLLoaded)
+                    if (v.version != Versions.v49)
                     {
-                        PatchType([typeof(ValueSynchronizer)]); // HQoL Support patch
+                        PatchType(typeof(LockConfigurationPatcher)); 
+                        if (isHQoLLoaded) PatchType(typeof(ValueSynchronizer)); // HQoL Support patch
                     }
                     correctVersion = true;
                     break;
@@ -77,6 +87,7 @@ namespace BCMHQModule
                     }
                     Logger.LogWarning("Applying generic patches anyway assuming this is a newer version. Things may break.");
                 }
+                if (bcmVersionString != versionDefinitions[0].bcmVersion) PatchType(typeof(MenuManagerPatcher)); // Add settings for SDC and internal event name display 
                 // General patches
                 PatchType([
                     typeof(EndOfGamePatcher),
@@ -92,9 +103,14 @@ namespace BCMHQModule
         {
             foreach (Type type in typeArray)
             {
-                Logger.LogDebug($"Patching {type.Name}");
-                Harmony?.PatchAll(type);
+                PatchType(type);
             }
+        }
+
+        internal static void PatchType(Type type)
+        {
+            Logger.LogDebug($"Patching {type.Name}");
+            Harmony?.PatchAll(type);
         }
 
         internal static void EndOfGameBackupPatch()

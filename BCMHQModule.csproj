@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <!-- BepInEx Properties -->
     <PropertyGroup>
         <AssemblyName>Tomatobird.BCMHQModule</AssemblyName>
         <Product>BCMHQModule</Product>
         <!-- Change to whatever version you're currently on. -->
-        <Version>1.4.0</Version>
+        <Version>1.5.0</Version>
     </PropertyGroup>
 
     <!-- Project Properties -->
