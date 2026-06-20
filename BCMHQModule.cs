@@ -19,20 +19,20 @@ namespace BCMHQModule
         internal new static ManualLogSource Logger { get; private set; } = null!;
         internal static Harmony? Harmony { get; set; }
 
-        public static ConfigEntry<bool> internalNames = null!, sdcMode = null!;
+        public static ConfigEntry<bool> internalNames = null!, sdcMode = null!, debugMode = null!;
 
         internal static bool correctVersion = false;
         internal static string bcmVersionString = "";
 
-        internal static List<VersionDefinition> versionDefinitions = new List<VersionDefinition> 
-        {
+        internal static List<VersionDefinition> versionDefinitions =
+        [
             new VersionDefinition(Versions.v49, "0.10.12", [typeof(NoMasksPatcher), typeof(GetSafePositionPatcher), typeof(DelayedExecutionPatcher_v49), typeof(ShipLeaveOnQuit)]),
-            new VersionDefinition(Versions.v50, "0.13.9", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit)]),
-            new VersionDefinition(Versions.v56, "0.13.10", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit)]),
-            new VersionDefinition(Versions.v72, "0.13.13", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit), typeof(UpdateEnemyHPPatcher)]),
-            new VersionDefinition(Versions.v73, "0.13.14", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit), typeof(UpdateEnemyHPPatcher)]),
-            new VersionDefinition(Versions.v81, "0.13.16", []),
-        };
+            new VersionDefinition(Versions.v50, "0.13.9", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit), typeof(DoSpawnOutsideEnemiesPatcher)]),
+            new VersionDefinition(Versions.v56, "0.13.10", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit), typeof(GetScrapInShipPatcher), typeof(DoSpawnOutsideEnemiesPatcher)]),
+            new VersionDefinition(Versions.v72, "0.13.13", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit), typeof(UpdateEnemyHPPatcher), typeof(GetScrapInShipPatcher), typeof(DoSpawnOutsideEnemiesPatcher)]),
+            new VersionDefinition(Versions.v73, "0.13.14", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit), typeof(UpdateEnemyHPPatcher), typeof(GetScrapInShipPatcher), typeof(DoSpawnOutsideEnemiesPatcher)]),
+            new VersionDefinition(Versions.v81, "0.13.17", [])
+        ];
 
         internal static bool isHQoLLoaded;
 
@@ -44,6 +44,7 @@ namespace BCMHQModule
 
             internalNames = Config.Bind("General", "InternalEventNames", true, "Display the internal event names instead of the randomly selected event descriptions.");
             sdcMode = Config.Bind("General", "SdcMode", false, "Set difficulty to 100 for Single Day Clear runs.");
+            debugMode = Config.Bind("General", "DebugMode", false, "Enable debug mode?");
 
             isHQoLLoaded = Chainloader.PluginInfos.ContainsKey("OreoM.HQoL.72") || Chainloader.PluginInfos.ContainsKey("OreoM.HQoL.73");
             Patch();

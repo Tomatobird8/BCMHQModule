@@ -12,10 +12,10 @@ namespace BCMHQModule.Patches
     /// <summary>
     /// Configuration lockdown patch
     /// </summary>
-    [HarmonyPatch(typeof(Configuration))]
+    [HarmonyPatch]
     public class LockConfigurationPatcher
     {
-        [HarmonyPatch(nameof(Configuration.CreateConfig))]
+        [HarmonyPatch(typeof(Configuration), nameof(Configuration.CreateConfig))]
         [HarmonyPostfix]
         public static void PostfixCreateConfig()
         {
@@ -214,5 +214,17 @@ namespace BCMHQModule.Patches
             EventManager.UpdateEventTypeCounts();
             EventManager.UpdateAllEventWeights();
         }
+
+        [HarmonyPatch(typeof(TerminalCommands), nameof(TerminalCommands.OnParsePlayerSentence))]
+        [HarmonyPrefix]
+        public static bool OnParsePlayerSentence_Prefix()
+        {
+            if (!BCMHQModule.debugMode.Value)
+            {
+                return false;
+            }
+            return true;
+        }
+
     }
 }

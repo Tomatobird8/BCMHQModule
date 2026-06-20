@@ -165,7 +165,7 @@ namespace BCMHQModule.Patches
         [HarmonyPostfix]
         private static void Start_Postfix()
         {
-            if (!BCMHQModule.sdcMode.Value && BCMHQModule.correctVersion)
+            if (!BCMHQModule.sdcMode.Value && BCMHQModule.correctVersion && !BCMHQModule.debugMode.Value)
             {
                 return;
             }
@@ -207,7 +207,11 @@ namespace BCMHQModule.Patches
             {
                 return;
             }
-            if (!BCMHQModule.correctVersion)
+            if (BCMHQModule.debugMode.Value)
+            {
+                infoDisplay.text = "Debug Mode";
+            }
+            else if (!BCMHQModule.correctVersion)
                 infoDisplay.text = $"Invalid Pack: BCM v{BCMHQModule.bcmVersionString}";
             else infoDisplay.text = "SDC Mode";
 

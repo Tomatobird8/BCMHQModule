@@ -15,6 +15,7 @@ namespace BCMHQModule.Patches
     {
         [HarmonyPatch(typeof(Manager), "GetScrapInShip")]
         [HarmonyPostfix]
+        [HarmonyPriority(Priority.Last)]
         private static void AddStoredScrapValue(ref float __result){
             var hqol73 = HQoL73Network.HQoLNetwork.Instance;
             if (hqol73 != null)
@@ -27,6 +28,7 @@ namespace BCMHQModule.Patches
             {
                 __result += HQoL72Network.HQoLNetwork.Instance.totalStorageValue.Value;
             }
+            BCMHQModule.Logger.LogDebug("GetScrapInShip value: " + __result);
         }
     }
 }
