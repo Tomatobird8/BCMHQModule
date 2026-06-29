@@ -134,7 +134,7 @@ namespace BCMHQModule.Patches
 
             Configuration.noneMultiplier = createNewWeatherSettings(LevelWeatherType.None, 1f, 1f);
             Configuration.dustCloudMultiplier = createNewWeatherSettings(LevelWeatherType.DustClouds, 1.05f, 1f);
-            Configuration.rainyMultiplier = createNewWeatherSettings(LevelWeatherType.Rainy, 1.05f, 1f);
+            Configuration.rainyMultiplier = createNewWeatherSettings(LevelWeatherType.Rainy, 1.1f, 1f);
             Configuration.stormyMultiplier = createNewWeatherSettings(LevelWeatherType.Stormy, 1.35f, 1.2f);
             Configuration.foggyMultiplier = createNewWeatherSettings(LevelWeatherType.Foggy, 1.15f, 1.1f);
             Configuration.floodedMultiplier = createNewWeatherSettings(LevelWeatherType.Flooded, 1.25f, 1.15f);
