@@ -26,12 +26,12 @@ namespace BCMHQModule
 
         internal static List<VersionDefinition> versionDefinitions =
         [
-            new VersionDefinition(Versions.v49, "0.10.12", [typeof(NoMasksPatcher), typeof(GetSafePositionPatcher), typeof(DelayedExecutionPatcher_v49), typeof(ShipLeaveOnQuit)]),
-            new VersionDefinition(Versions.v50, "0.13.9", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit), typeof(DoSpawnOutsideEnemiesPatcher), typeof(ShipLeaveTimeEffectsPatcher)]),
-            new VersionDefinition(Versions.v56, "0.13.10", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit), typeof(GetScrapInShipPatcher), typeof(DoSpawnOutsideEnemiesPatcher), typeof(ShipLeaveTimeEffectsPatcher)]),
-            new VersionDefinition(Versions.v72, "0.13.13", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit), typeof(UpdateEnemyHPPatcher), typeof(GetScrapInShipPatcher), typeof(DoSpawnOutsideEnemiesPatcher), typeof(ShipLeaveTimeEffectsPatcher)]),
-            new VersionDefinition(Versions.v73, "0.13.14", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit), typeof(UpdateEnemyHPPatcher), typeof(GetScrapInShipPatcher), typeof(DoSpawnOutsideEnemiesPatcher), typeof(ShipLeaveTimeEffectsPatcher)]),
-            new VersionDefinition(Versions.v81, "0.13.20", [])
+            new VersionDefinition(Versions.v49, "0.10.12", [typeof(NoMasksPatcher), typeof(GetSafePositionPatcher), typeof(DelayedExecutionPatcher_v49), typeof(ShipLeaveOnQuit), typeof(ResetValuesPatcher)]),
+            new VersionDefinition(Versions.v50, "0.13.9", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit), typeof(DoSpawnOutsideEnemiesPatcher), typeof(ShipLeaveTimeEffectsPatcher), typeof(ResetValuesPatcher)]),
+            new VersionDefinition(Versions.v56, "0.13.10", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit), typeof(GetScrapInShipPatcher), typeof(DoSpawnOutsideEnemiesPatcher), typeof(ShipLeaveTimeEffectsPatcher), typeof(ResetValuesPatcher)]),
+            new VersionDefinition(Versions.v72, "0.13.13", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit), typeof(UpdateEnemyHPPatcher), typeof(GetScrapInShipPatcher), typeof(DoSpawnOutsideEnemiesPatcher), typeof(ShipLeaveTimeEffectsPatcher), typeof(ResetValuesPatcher)]),
+            new VersionDefinition(Versions.v73, "0.13.14", [typeof(DelayedExecutionPatcher), typeof(ShipLeaveOnQuit), typeof(UpdateEnemyHPPatcher), typeof(GetScrapInShipPatcher), typeof(DoSpawnOutsideEnemiesPatcher), typeof(ShipLeaveTimeEffectsPatcher), typeof(ResetValuesPatcher)]),
+            new VersionDefinition(Versions.v81, "0.13.21", [])
         ];
 
         internal static bool isHQoLLoaded;

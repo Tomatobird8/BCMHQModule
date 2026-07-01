@@ -28,7 +28,7 @@ namespace BCMHQModule.Patches
             {
                 __result += HQoL72Network.HQoLNetwork.Instance.totalStorageValue.Value;
             }
-            BCMHQModule.Logger.LogDebug("GetScrapInShip value: " + __result);
+            BCMHQModule.Logger.LogInfo("GetScrapInShip value: " + __result);
         }
     }
 }

@@ -169,6 +169,8 @@ namespace BCMHQModule.Patches
             {
                 return;
             }
+            BCMHQModule.Logger.LogInfo($"SDC Mode: {BCMHQModule.sdcMode.Value}");
+            BCMHQModule.Logger.LogInfo($"Debug Mode: {BCMHQModule.debugMode.Value}");
             if (infoDisplay == null)
             {
                 BCMHQModule.Logger.LogInfo("infoDisplay is null. Creating a new infodisplay.");
